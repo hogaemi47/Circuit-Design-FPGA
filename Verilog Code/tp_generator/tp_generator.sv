@@ -88,7 +88,7 @@ module tp_generator (
 		end
 		else begin
 			hsync <= 0;
-		endß
+		end
 	end
 
 	always @(posedge px_clk) begin
@@ -128,7 +128,7 @@ module tp_generator (
 		else if (hsync & ~hsync_d) begin
 			line_cnt <= line_cnt + 1;
 		end
-		else if (VWIDTH) begin
+		else if (line_cnt == VWIDTH) begin
 			line_cnt <= 0;
 		end
 	end
