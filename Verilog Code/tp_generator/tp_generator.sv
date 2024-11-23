@@ -68,7 +68,7 @@ module tp_generator (
 		if (sys_rst) begin
 			hcnt <= 0;
 		end
-		else if (vcnt < HWIDTH + HSP) begin
+		else if (hcnt < HWIDTH + HSP) begin
 			hcnt <= hcnt + 1;
 		end
 		else begin
