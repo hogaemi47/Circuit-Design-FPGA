@@ -88,7 +88,7 @@ module tp_generator (
 		end
 		else begin
 			hsync <= 0;
-		end
+		endß
 	end
 
 	always @(posedge px_clk) begin
@@ -96,7 +96,7 @@ module tp_generator (
 			hsync_d <= 0;
 		end
 		else begin
-			hsync_d <= hysnc;
+			hsync_d <= hsync;
 		end
 	end
 
