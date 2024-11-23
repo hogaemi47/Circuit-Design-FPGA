@@ -49,16 +49,18 @@ module tp_generator (
 	localparam VFP		= 11;
 	localparam VBP		= 31;
 
-	localparam HWIDTH	= HACT + HSP + HFP;
+	localparam HWIDTH	= HACT + HSP + HFP + HBP;
 	localparam VWIDTH	= VACT + VSP + VFP + VBP;
 
 	logic 			vsync;
-	logic 			hsync;
+	logic			hsync;
+
+	logic 			h_line;
 	logic			dv;
 
-	logic			hsync_d;
+	logic			h_line_d;
 
-	logic [15:0] 	hcnt;
+	logic [15:0] 	h_cnt;
 	logic [15:0]	line_cnt;
 
 	////////////////////////////////////////
@@ -66,13 +68,37 @@ module tp_generator (
 	////////////////////////////////////////
 	always @(posedge px_clk) begin
 		if (sys_rst) begin
-			hcnt <= 0;
+			h_cnt <= 0;
 		end
 		else if (hcnt < HWIDTH + HSP) begin
-			hcnt <= hcnt + 1;
+			h_cnt <= h_cnt + 1;
 		end
 		else begin
-			hcnt <= 0;
+			h_cnt <= 0;
+		end
+	end
+
+	always @(posedge px_clk) begin
+		if (sys_rst) begin
+			h_line <= 0;
+		end
+		else if (h_cnt < HSP) begin
+			h_line <= 0;
+		end
+		else if (h_cnt >= HSP && h_cnt < HSP + HWIDTH) begin
+			h_line <= 1;
+		end
+		else begin
+			h_line <= 0;
+		end
+	end
+
+	always @(posedge px_clk) begin
+		if (sys_rst) begin
+			h_line_d <= 0;
+		end
+		else begin
+			h_line_d <= h_line;
 		end
 	end
 
@@ -80,23 +106,11 @@ module tp_generator (
 		if (sys_rst) begin
 			hsync <= 0;
 		end
-		else if (hcnt < HSP) begin
-			hsync <= 0;
-		end
-		else if (hcnt >= HSP && hcnt < HSP + HWIDTH) begin
-			hsync <= 1;
+		else if (vsync && ((line_cnt > 1) && (line_cnt < 481))) begin
+			hsync <= h_line;
 		end
 		else begin
 			hsync <= 0;
-		end
-	end
-
-	always @(posedge px_clk) begin
-		if (sys_rst) begin
-			hsync_d <= 0;
-		end
-		else begin
-			hsync_d <= hsync;
 		end
 	end
 
@@ -107,10 +121,10 @@ module tp_generator (
 		if (sys_rst) begin
 			dv <= 0;
 		end
-		else if (hcnt > HSP + HBP) begin
+		else if (h_cnt > HSP + HBP) begin
 			dv <= 1;
 		end
-		else if (hcnt > HBP + HACT) begin
+		else if (h_cnt > HBP + HACT) begin
 			dv <= 0;
 		end
 		else begin
