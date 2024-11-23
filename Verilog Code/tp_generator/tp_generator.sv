@@ -127,9 +127,6 @@ module tp_generator (
 		else if (h_cnt == HBP + HACT) begin
 			dv <= 0;
 		end
-		else begin
-			dv <= 0;
-		end
 	end
 
 	////////////////////////////////////////
@@ -151,10 +148,10 @@ module tp_generator (
 		if (sys_rst) begin
 			vsync <= 0;
 		end
-		else if (line_cnt == VSP) begin
+		else if (line_cnt == VSP + 1) begin
 			vsync <= 1;
 		end
-		else if (line_cnt == VSP + VACT) begin
+		else if (line_cnt == VSP + VFP + VACT) begin
 			vsync <= 0;
 		end
 	end
