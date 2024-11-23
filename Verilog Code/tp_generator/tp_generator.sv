@@ -85,7 +85,7 @@ module tp_generator (
 		else if (h_cnt < HSP) begin
 			h_line <= 0;
 		end
-		else if (h_cnt >= HSP && h_cnt < HWIDTH) begin
+		else if (h_cnt >= HSP && h_cnt < (HWIDTH - HFP)) begin
 			h_line <= 1;
 		end
 		else begin
@@ -139,7 +139,7 @@ module tp_generator (
 		if (sys_rst) begin
 			line_cnt <= 0;
 		end
-		else if (h_line & ~h_line_d) begin
+		else if (vsync && (h_line & ~h_line_d)) begin
 			line_cnt <= line_cnt + 1;
 		end
 		else if (line_cnt == VWIDTH) begin
