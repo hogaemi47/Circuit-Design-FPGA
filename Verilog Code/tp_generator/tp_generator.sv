@@ -110,7 +110,7 @@ module tp_generator (
 		else if (hcnt > HSP + HBP) begin
 			dv <= 1;
 		end
-		else if (hcnt > HSP + HBP + HACT) begin
+		else if (hcnt > HBP + HACT) begin
 			dv <= 0;
 		end
 		else begin
